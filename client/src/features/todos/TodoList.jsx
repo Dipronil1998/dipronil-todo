@@ -1,4 +1,4 @@
-import { useGetTodosQuery } from '../api/apiSlice'
+import { useGetTodosQuery,useAddTodoMutation } from '../api/apiSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react"
@@ -16,7 +16,7 @@ const TodoList = () => {
     const [newTodo, setNewTodo] = useState(todo)
 
     const { data: todos, isLoading, isError, isSuccess, error } = useGetTodosQuery();
-    // const [addTodo] = useAddTodoMutation()
+    const [addTodo] = useAddTodoMutation()
     // const [updateTodo] = useUpdateTodoMutation()
     // const [deleteTodo] = useDeleteTodoMutation()
 
@@ -30,8 +30,8 @@ const TodoList = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("ll");
-        // addTodo({ id: "1",userId: 1, title: newTodo, completed: false })
-        // setNewTodo('')
+        addTodo({ title: newTodo.title, completed: false, description: newTodo.description, date: newTodo.date  })
+        setNewTodo(todo)
     }
 
     const newItemSection =
@@ -99,6 +99,35 @@ const TodoList = () => {
         todayLists = <p>{error}</p>
     }
 
+
+    let upcomeingLists;
+    if (isLoading) {
+        upcomeingLists = <p>Loading...</p>
+    } else if (isSuccess) {
+        upcomeingLists = todos?.upcomeingTodo?.map(todo => {
+            return (
+                <article key={todo.id}>
+                    <div className="todo">
+                        <input
+                            type="checkbox"
+                            checked={todo.completed}
+                            id={todo.id}
+                            // onChange={() => updateTodo({ ...todo, completed: !todo.completed })}
+                        />
+                        <label htmlFor={todo.id}>{todo.title}</label>
+                    </div>
+                    <button className="trash"
+                        // onClick={() => deleteTodo({ id: todo.id })}
+                    >
+                        <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                </article>
+            )
+        })
+    } else if (isError) {
+        upcomeingLists = <p>{error}</p>
+    }
+
     return (
         <main>
             <h1>Todo List</h1>
@@ -106,6 +135,8 @@ const TodoList = () => {
             <h5>Today's tasks</h5>
             {todayLists}
             <h5>Upcoming tasks</h5>
+            {upcomeingLists}
+            <h5>Pending tasks</h5>
         </main>
     )
 }

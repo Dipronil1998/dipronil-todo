@@ -1,22 +1,23 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import baseUrl from '../../helper/baseUrl'
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3002/api/v1' }),
+    baseQuery: fetchBaseQuery({ baseUrl: baseUrl }),
     tagTypes: ['Todos'],
     endpoints: (builder) => ({
         getTodos: builder.query({
             query: () => '/todo',
             providesTags: ['Todos']
         }),
-        // addTodo: builder.mutation({
-        //     query: (todo) => ({
-        //         url: '/todos',
-        //         method: 'POST',
-        //         body: todo
-        //     }),
-        //     invalidatesTags: ['Todos']
-        // }),
+        addTodo: builder.mutation({
+            query: (todo) => ({
+                url: '/todo',
+                method: 'POST',
+                body: todo
+            }),
+            invalidatesTags: ['Todos']
+        }),
         // updateTodo: builder.mutation({
         //     query: (todo) => ({
         //         url: `/todos/${todo.id}`,
@@ -36,4 +37,4 @@ export const apiSlice = createApi({
     })
 })
 
-export const {useGetTodosQuery} = apiSlice
+export const {useGetTodosQuery, useAddTodoMutation} = apiSlice
