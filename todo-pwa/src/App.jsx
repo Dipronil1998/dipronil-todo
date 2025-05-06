@@ -5,11 +5,11 @@ import TodoList from "./components/TodoList";
 function App() {
   const [todos, setTodos] = useState([]);
 
-  const addTodo = async (title, description) => {
+  const addTodo = async (title, description, date) => {
     const newTodoData = {
       title,
       description: description,
-      date: new Date().toISOString().split("T")[0], // format: YYYY-MM-DD
+      date: date
     };
 
     try {
@@ -44,7 +44,7 @@ function App() {
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">Todo PWA</h1>
+      <h1 className="text-xl font-bold mb-4">Todo</h1>
       <AddTodo addTodo={addTodo} />
       <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
     </div>
