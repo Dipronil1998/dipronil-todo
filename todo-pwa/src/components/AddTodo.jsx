@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect, useState } from "react";
 
-export default function AddTodo({ addTodo }) {
+export default function AddTodo({ addTodo, closeModal }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState("")
 
   useEffect(() => {
     const today = new Date().toLocaleDateString('en-CA');
@@ -13,37 +12,39 @@ export default function AddTodo({ addTodo }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (title.trim()) {
-      addTodo(title, description, date);
-      setTitle("");
-      setDescription("");
-      const today = new Date().toLocaleDateString('en-CA');
-      setDate(today); 
-    }
+    if (!title.trim()) return;
+
+    addTodo(title, description);
+    setTitle("");
+    setDescription("");
+    const today = new Date().toLocaleDateString('en-CA');
+      setDate(today);
+    if (closeModal) closeModal();
+    const modal = bootstrap.Modal.getInstance(document.getElementById("addTodoModal"));
+    modal.hide();
   };
 
   return (
-    <div className="container d-flex justify-content-center mt-5">
-      <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '500px' }}>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Add new todo"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Add description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <textarea
+          className="form-control"
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
           <input
             type="date"
             className="form-control"
@@ -51,10 +52,7 @@ export default function AddTodo({ addTodo }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100" disabled={!title}>
-          Add
-        </button>
-      </form>
-    </div>
+      <button type="submit" className="btn btn-success w-100" disabled={!title}>Add</button>
+    </form>
   );
 }

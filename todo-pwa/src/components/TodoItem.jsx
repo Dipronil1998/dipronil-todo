@@ -1,16 +1,17 @@
 export default function TodoItem({ todo, toggleTodo, deleteTodo }) {
-    return (
-      <li className="flex justify-between items-center border px-2 py-1 rounded">
-        <span
-          onClick={() => toggleTodo(todo.id)}
-          className={`cursor-pointer ${todo.completed ? "line-through text-gray-500" : ""}`}
-        >
-          {todo.text}
-        </span>
-        <button onClick={() => deleteTodo(todo.id)} className="text-red-500">
-          ❌
-        </button>
-      </li>
-    );
-  }
-  
+  const textStyle = todo.isComplete ? "line-through text-gray-500" : "";
+
+  return (
+    <li className="border rounded p-3 mb-2 shadow-sm flex justify-between items-start gap-4">
+      <div onClick={() => toggleTodo(todo._id)} className="cursor-pointer flex-1">
+        <h3 className={`font-semibold text-lg ${textStyle}`}>{todo.title}</h3>
+        {todo.description && (
+          <p className={`text-sm mt-1 ${textStyle}`}>{todo.description}</p>
+        )}
+      </div>
+      <button onClick={() => deleteTodo(todo._id)} className="text-red-500 text-xl">
+        ❌
+      </button>
+    </li>
+  );
+}
